@@ -288,10 +288,6 @@ async def changesStatus(ctx, status):
 
 #		::: NORMAL COMMANDS :::		#
 
-@client.command()
-async def getChannelID(ctx):
-	r = requests.get(f"https://discord.com/api/v8/guilds/{ctx.guild.id}/channels", headers = headers)
-	print(r.text)
-
+# make your own
 
 client.run(__TOKEN__)
